@@ -1,12 +1,41 @@
 import random, time, webbrowser
 import os, pyttsx3
+import mpcm
 
-engine = pyttsx3.Engine()
+def starter():
+    global device_confirmation
+    device_confirmation = input("Are you on a fully fledged Windows/Linux Device? (\"yes\"/nothing)\nEntering nothing will disable a few good options...\nIf you enter, \"yes\", not having any setup which supports this code, the code will throw an error.\nEnter: ")
 
-print("This project was entirely made by Anmol. With nothing helping externally.\n")
-engine.say("This project was entirely made by Anmol. With nothing helping externally. Believe me.")
-engine.runAndWait()
-time.sleep(6)
+    if device_confirmation:
+        global engine
+        engine = pyttsx3.Engine()
+
+    print("This project was entirely made by Anmol. With nothing helping externally.\n")
+    if device_confirmation:
+        try:
+            engine.say("This project was entirely made by Anmol. With nothing helping externally.")
+            engine.runAndWait()
+        except Exception as e:
+            print(f"Error: {e}\n\n The code threw an error. You maybe aren't having a Windows/Supported Linux Device.")
+    time.sleep(6)
+    mode_selection = input("Select a mode:\nNormal Mode (nm)\nHard Mode (hm)\n2 Players Mode (tpm)\nComputer as Player Mode (capm)\nMultiple Players Chaos Mode (mpcm)\n] ")
+
+    modes = {
+        "nm": normal,
+        "hm": hard,
+        "tpm": tpm,
+        "capm": capm,
+        "mpcm": mpcm_mode
+    }
+
+    if mode_selection in modes:
+        os.system('cls' if os.name == 'nt' else 'clear')
+        modes[mode_selection]()
+    else:
+        print("Invalid Input!")
+
+def mpcm_mode():
+    mpcm.game()
 
 def normal():
     userrange = int(input("Enter the desired Range\n"))
@@ -76,14 +105,15 @@ def hard():
 
 def tpm():
     print("In this mode, One person types the number, and another guesses the number.\n All in one device.")
-    engine.say("in this mode, one person types the secret number, and another guesses it. All in just one device!")
-    engine.runAndWait()
+    if device_confirmation:
+        engine.say("in this mode, one person types the secret number, and another guesses it. All in just one device!")
+        engine.runAndWait()
     time.sleep(7)
     print("Pass the phone to whoever will enter the number and first hint.")
     time.sleep(7)
     secretnumber = int(input("Enter the secret number, HIDDEN FROM ANYONE ELSE!\n"))
     myhint = input("Enter the first hint for the one who'll guess the number.\n (e.g. \"The number is between 0 and 100\")\n")
-    os.system('clr' if os.name == 'nt' else 'clear')
+    os.system('cls' if os.name == 'nt' else 'clear')
     print("Pass the phone to whoever will guess the number.")
     time.sleep(7)
     guessnumber = int(input(f"Guess the number!\nFirst hint from Player 1:\n{myhint}\n"))
@@ -101,7 +131,7 @@ def tpm():
         else:
             print("\nGot into a weird situation...")
         guessnumber = int(input(f"Guess the number!\nFirst hint from Player 1:\n{myhint}\n"))
-    if guessnumber == secretnumber or guessnumber == "olfc":
+    if guessnumber == secretnumber or guessnumber == "1001001":
         print("YOU WONNN!!!!! XDD")
         webbrowser.open("https://youtu.be/dQw4w9WgXcQ?t=0")
         print(f"Total tries: {tries+1} tries")
@@ -111,8 +141,9 @@ def capm():
     low = 1
     tries = 0
     print("Message by Anmol:\nThis program uses really basic Math to guess a number, so don't expect it to work really good!")
-    engine.say("Message by Anmol. This program uses really basic Math to guess a number, so don't expect it to work really good!")
-    engine.runAndWait()
+    if device_confirmation:
+        engine.say("Message by Anmol. This program uses really basic Math to guess a number, so don't expect it to work really good!")
+        engine.runAndWait()
     print("\nThink of a number between 0 and 100!\nI'll try to guess it.. I'm newbie at it though\n")
     while True:
         guess = (high + low) // 2
@@ -136,18 +167,3 @@ def capm():
             print(f"Total tries: {tries} tries")
         else:
             print(f"Invalid Input! You wrote: {confirmation} where options are:\nH for Higher,\nL for Lower,\nC for Correct!")
-
-def starter():
-    mode_selection = input("Select a mode:\nNormal Mode (nm)\nHard Mode (hm)\n2 Players Mode (tpm)\nComputer as Player Mode (capm)\n] ")
-
-    modes = {
-        "nm": normal,
-        "hm": hard,
-        "tpm": tpm,
-        "capm": capm
-    }
-
-    if mode_selection in modes:
-        modes[mode_selection]()
-    else:
-        print("Invalid Input!")
